@@ -1,0 +1,5 @@
+base_user_password: devops101
+allow_passwd_ssh_connection: "yes"
+ssh_public_key: ~
+
+ansible_user: root

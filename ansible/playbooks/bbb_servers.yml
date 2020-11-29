@@ -1,0 +1,12 @@
+- hosts: bbb_servers
+  become: yes
+  roles:
+    # geerlingguy.nodejs is a dependency
+    # - name: geerlingguy.nodejs
+    # geerlingguy.docker is a dependency
+    # - name: geerlingguy.docker
+    - name: n0emis.bigbluebutton
+      vars:
+        bbb_hostname: "{{ bbb_domain }}"
+        bbb_letsencrypt_email: eliegavoty@free.fr
+        bbb_allow_mail_notifications: false

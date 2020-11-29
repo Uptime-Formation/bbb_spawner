@@ -1,0 +1,70 @@
+- name: Upgrade servers
+  apt:
+    update_cache: yes
+    upgrade: "yes"
+
+- name: Ensure we have python3 tools installed
+  apt:
+    name:
+      - python3-pip
+      - python3-setuptools
+
+- name: Ensure we have sudo installed
+  apt:
+    name: sudo
+
+- name: Make sure we have a 'sudo' group
+  group:
+    name: sudo
+    state: present
+
+- name: Allow 'sudo' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^%sudo"
+    line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+    validate: visudo -cf %s
+  when: passwordless_sudo
+
+- name: Ensure standard sudoers configuration with passwordless sudo
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+
+- name: Add {{ base_unix_user }} user and add it to sudo group
+  user:
+    name: "{{ base_unix_user }}"
+    password: "{{ base_user_password | password_hash('sha512', 'myseijJIjretsalt') }}"
+    shell: /bin/bash
+    groups: ["sudo"]
+    append: yes
+
+- name: Allow user '{{ base_unix_user }}' ssh connexion
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^AllowUsers"
+    line: "AllowUsers root {{ base_unix_user }}"
+  notify: reload sshd
+
+- name: Configure (yes/no) ssh connexion using password
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication {{ allow_passwd_ssh_connection }}"
+  notify: reload sshd
+
+- name: Ensure user .ssh folder present
+  file:
+    state: directory
+    path: /home/{{ base_unix_user }}/.ssh
+
+- name: Configure {{ base_unix_user }} authorized_keys if a public key was defined
+  copy:
+    src: "{{ ssh_public_key }}"
+    dest: /home/{{ base_unix_user }}/.ssh/authorized_keys
+    owner: "{{ base_unix_user }}"
+    group: "{{ base_unix_user }}"
+  when: ssh_public_key|bool
