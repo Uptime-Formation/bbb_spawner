@@ -1,5 +1,10 @@
 - hosts: bbb_servers
   become: yes
+  # # To avoid docker_compose ansible module python error in python 3.5:
+  # # https://stackoverflow.com/a/63159584
+  # tasks:
+  #   command: pip3 install jsonschema==3.0.2
+  
   roles:
     # geerlingguy.nodejs is a dependency
     # - name: geerlingguy.nodejs
@@ -10,3 +15,7 @@
         bbb_hostname: "{{ bbb_domain }}"
         bbb_letsencrypt_email: eliegavoty@free.fr
         bbb_allow_mail_notifications: false
+        # To be changed of course
+        bbb_coturn_secret: ee8d093109a9b273
+        bbb_greenlight_secret: 107308d54ff4a5f
+        bbb_greenlight_db_password: 2585c27c785e8895ec
