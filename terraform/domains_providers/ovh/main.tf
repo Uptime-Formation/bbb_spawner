@@ -12,12 +12,18 @@ provider "ovh" {
 
 }
 
-data "ovh_domain_zone" "ethicaltech_domain" {
-  name = "ethicaltech.best"
+data "ovh_domain_zone" "uptime_domain" {
+  name = "uptime-formation.fr"
 }
+data "ovh_domain_zone" "hp_domain" {
+  name = "hadrienpelissier.fr"
+}
+# data "ovh_domain_zone" "ethicaltech_domain" {
+#   name = "ethicaltech.best"
+# }
 
 resource "ovh_domain_zone_record" "bbb_subdomain" {
-  zone      = data.ovh_domain_zone.ethicaltech_domain.name
+  zone      = data.ovh_domain_zone.hp_domain.name
   subdomain = "bbb"
   fieldtype = "A"
   ttl       = "0"

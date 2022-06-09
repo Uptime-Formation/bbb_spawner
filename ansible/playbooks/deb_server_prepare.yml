@@ -1,4 +1,8 @@
 - hosts: all
   become: yes
+  # pre_tasks:
+  # - name: required in old distribs
+  #   command: apt-get install -y sudo python-minimal python-setuptools
+
   roles:
     - name: uptime.deb_server_prepare

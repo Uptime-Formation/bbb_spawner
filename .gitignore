@@ -20,3 +20,5 @@ ansible-digital_ocean.cache
 geerlingguy.*
 
 stored_certs/
+
+.DS_Store
