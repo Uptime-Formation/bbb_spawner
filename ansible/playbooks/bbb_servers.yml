@@ -23,3 +23,4 @@
         bbb_greenlight_db_password: 2585c27c785e8895ec
         bbb_freeswitch_socket_password: neCE8mhpn7SWfcCB
         bbb_freeswitch_default_password: YMtYsRngRYg8LsfQ
+        bbb_api_demos_enable: yes
